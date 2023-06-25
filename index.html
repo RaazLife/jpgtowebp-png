@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JPG Converter</title>
+  <style>
+    body {
+      text-align: center;
+      padding: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-upload {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4c9aff;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .file-upload:hover {
+      background-color: #3885e3;
+    }
+  </style>
+</head>
+<body>
+  <h1>JPG Converter</h1>
+  <input type="file" id="fileInput" accept=".jpg">
+  <label for="fileInput" class="file-upload">Upload JPG Image</label>
+  <br>
+  <br>
+  <button onclick="convertToWebP()">Convert to WebP</button>
+  <button onclick="convertToPNG()">Convert to PNG</button>
+  <br>
+  <br>
+  <a id="downloadLink" href="#" download></a>
+
+  <script>
+    function convertToWebP() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob(function (blob) {
+              const link = document.getElementById("downloadLink");
+              link.href = URL.createObjectURL(blob);
+              link.download = "converted.webp";
+              link.click();
+            }, "image/webp", 1);
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function convertToPNG() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.onload = function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            const link = document.getElementById("downloadLink");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "converted.png";
+            link.click();
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
